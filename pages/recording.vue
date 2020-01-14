@@ -1,10 +1,20 @@
 <template>
   <div>
-    <div>
+    <div v-show="!blobUrl">
       <h1>Streaming</h1>
       <video
         :srcObject.prop="localStream"
         autoplay
+      />
+    </div>
+    <div v-if="blobUrl">
+      <h1>PlayBack</h1>
+      <video
+        :src="blobUrl"
+        width="375"
+        height="500"
+        autoplay
+        controls
       />
     </div>
     <div class="effect_control__container">
@@ -18,21 +28,32 @@
         エフェクト
       </label>
     </div>
+    <div class="recording__container">
+      <button @click="startRecording()">
+        START
+      </button>
+      <button @click="stopRecording()">
+        STOP
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
+import record from '~/utils/record'
+
 export default {
   data:() => ({
     isActiveEffect: false,
     localStream: null,
-    audioCtx: null
+    audioCtx: null,
+    blobUrl: null
   }),
   created() {
     navigator.mediaDevices.getUserMedia({
       video: {
-        width: 360,
-        height: 240
+        width: 375,
+        height: 500
       },
       audio: true
     })
@@ -47,20 +68,24 @@ export default {
         return
       }
 
-      //AudioContextを生成
       this.audioCtx = new AudioContext()
-
-      //BiquadFilterを生成
       const biquadFilter = this.audioCtx.createBiquadFilter();
       biquadFilter.type = 'highshelf';     // ハイシェルフフィルター
       biquadFilter.frequency.value = 1000; // 周波数閾値
       biquadFilter.gain.value = 100;       // Gain(強さ)
 
-      //getUserMediaで取得したMediaStreamからMediaStreamAudioSourceNodeを生成
       const mediaStreamSource = this.audioCtx.createMediaStreamSource(this.localStream)
       mediaStreamSource.connect(biquadFilter)
       biquadFilter.connect(this.audioCtx.destination)
     },
+    startRecording() {
+      record.startRec(this.localStream)
+    },
+    async stopRecording() {
+      const res = await record.stopRec()
+      this.blobUrl = window.URL.createObjectURL(res)
+      this.localStream = null
+    }
   }
 }
 </script>
