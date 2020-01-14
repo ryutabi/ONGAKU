@@ -11,7 +11,6 @@ const stopRec = () => {
     mediaRecorder.stop()
     mediaRecorder.ondataavailable = e => {
       if (e.data && e.data.size > 0) {
-        console.log(e.data)
         const blob = new Blob([e.data], { type: "video/webm" })
         resolve(blob)
       }

@@ -36,13 +36,20 @@
         STOP
       </button>
     </div>
+    <div class="container">
+      <record-button />
+    </div>
   </div>
 </template>
 
 <script>
 import record from '~/utils/record'
+import RecordButton from '~/components/RecordButton'
 
 export default {
+  components: {
+    RecordButton
+  },
   data:() => ({
     isActiveEffect: false,
     localStream: null,
@@ -90,6 +97,12 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.container {
+  background-color: black;
+  height: 7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
