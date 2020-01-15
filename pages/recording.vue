@@ -34,9 +34,12 @@
 </template>
 
 <script>
+import { storage } from '~/plugins/firebase'
 import record from '~/utils/record'
 import RecordButton from '~/components/RecordButton'
 import EffectBox from '~/components/EffectBox'
+
+const organismStorageRef = storage.ref('organisms')
 
 export default {
   components: {
@@ -47,6 +50,7 @@ export default {
     isRecorded: false,
     isActiveEffect: false,
     localStream: null,
+    organismData: null,
     audioCtx: null,
     blobUrl: null
   }),
@@ -93,9 +97,24 @@ export default {
       record.startRec(this.localStream)
     },
     async stopRecording() {
-      const res = await record.stopRec()
-      this.blobUrl = window.URL.createObjectURL(res)
+      this.organismData = await record.stopRec()
+      this.blobUrl = window.URL.createObjectURL(this.organismData)
       this.localStream = null
+      this.uploadOrganism(this.organismData).then(() => {
+        console.log('アップ成功！！')
+        // 新規投稿画面に遷移
+        // this.$router.push('/')
+      })
+    },
+    async uploadOrganism(data) {
+      const organismRef = organismStorageRef.child('hoge')
+      await organismRef.put(data).then(snapshot => {
+        console.log(`added firebase storage: ${snapshot.state}!!`)
+      })
+      await organismRef.getDownloadURL().then(url => {
+        // url を Vuex に追加
+        console.log(url)
+      })
     }
   }
 }
