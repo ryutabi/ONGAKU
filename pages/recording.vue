@@ -68,7 +68,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions('post', ['addOrganismUrl']),
+    ...mapActions('post', ['addPostId', 'addOrganismUrl']),
     effectProcessing() {
       if (this.isActiveEffect) {
         this.audioCtx.close()
@@ -109,12 +109,14 @@ export default {
       })
     },
     async uploadOrganism(data) {
-      const organismRef = organismStorageRef.child('hoge')
+      // id: 現在時刻のミリ秒表記
+      const id = String(new Date().getTime())
+      const organismRef = organismStorageRef.child(id)
       await organismRef.put(data).then(snapshot => {
         console.log(`added firebase storage: ${snapshot.state}!!`)
       })
       await organismRef.getDownloadURL().then(url => {
-        // url を Vuex に追加
+        this.addPostId(id)
         this.addOrganismUrl(url)
       })
     }
