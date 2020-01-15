@@ -105,7 +105,7 @@ export default {
       this.uploadOrganism(this.organismData).then(() => {
         console.log('アップ成功！！')
         // 新規投稿画面に遷移
-        // this.$router.push('/')
+        this.$router.push('/posts/new')
       })
     },
     async uploadOrganism(data) {

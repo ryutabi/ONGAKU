@@ -2,8 +2,8 @@ import { db } from '~/plugins/firebase'
 
 export const state = () => ({
   postData: {
-    id: null,
-    organismUrl: null
+    id: '',
+    organismUrl: ''
   }
 })
 
