@@ -34,9 +34,13 @@
 </template>
 
 <script>
+import { storage } from '~/plugins/firebase'
 import record from '~/utils/record'
 import RecordButton from '~/components/RecordButton'
 import EffectBox from '~/components/EffectBox'
+import { mapActions } from 'vuex'
+
+const organismStorageRef = storage.ref('organisms')
 
 export default {
   components: {
@@ -47,6 +51,7 @@ export default {
     isRecorded: false,
     isActiveEffect: false,
     localStream: null,
+    organismData: null,
     audioCtx: null,
     blobUrl: null
   }),
@@ -63,6 +68,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions('post', ['addPostId', 'addOrganismUrl']),
     effectProcessing() {
       if (this.isActiveEffect) {
         this.audioCtx.close()
@@ -93,9 +99,26 @@ export default {
       record.startRec(this.localStream)
     },
     async stopRecording() {
-      const res = await record.stopRec()
-      this.blobUrl = window.URL.createObjectURL(res)
+      this.organismData = await record.stopRec()
+      this.blobUrl = window.URL.createObjectURL(this.organismData)
       this.localStream = null
+      this.uploadOrganism(this.organismData).then(() => {
+        console.log('アップ成功！！')
+        // 新規投稿画面に遷移
+        // this.$router.push('/')
+      })
+    },
+    async uploadOrganism(data) {
+      // id: 現在時刻のミリ秒表記
+      const id = String(new Date().getTime())
+      const organismRef = organismStorageRef.child(id)
+      await organismRef.put(data).then(snapshot => {
+        console.log(`added firebase storage: ${snapshot.state}!!`)
+      })
+      await organismRef.getDownloadURL().then(url => {
+        this.addPostId(id)
+        this.addOrganismUrl(url)
+      })
     }
   }
 }
