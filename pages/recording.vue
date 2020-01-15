@@ -1,43 +1,34 @@
 <template>
-  <div>
-    <div v-show="!blobUrl">
-      <h1>Streaming</h1>
-      <video
-        :srcObject.prop="localStream"
-        autoplay
+  <div class="recording__container">
+    <div class="recording_video__container">
+      <div v-show="!blobUrl">
+        <video
+          :srcObject.prop="localStream"
+          autoplay
+        />
+      </div>
+      <div v-if="blobUrl">
+        <video
+          :src="blobUrl"
+          width="375"
+          height="375"
+          autoplay
+          controls
+        />
+      </div>
+    </div>
+    <div class="effect_box__container">
+      <effect-box
+        :is-active="isActiveEffect"
+        effect-label="Destortion"
+        @click="effectProcessing"
       />
     </div>
-    <div v-if="blobUrl">
-      <h1>PlayBack</h1>
-      <video
-        :src="blobUrl"
-        width="375"
-        height="500"
-        autoplay
-        controls
+    <div class="recording_button__container">
+      <record-button
+        :is-active="isRecorded"
+        @click="handleRecord"
       />
-    </div>
-    <div class="effect_control__container">
-      <input
-        id="effector"
-        v-model="isActiveEffect"
-        type="checkbox"
-        @click="effectProcessing()"
-      >
-      <label for="effector">
-        エフェクト
-      </label>
-    </div>
-    <div class="recording__container">
-      <button @click="startRecording()">
-        START
-      </button>
-      <button @click="stopRecording()">
-        STOP
-      </button>
-    </div>
-    <div class="container">
-      <record-button />
     </div>
   </div>
 </template>
@@ -45,12 +36,15 @@
 <script>
 import record from '~/utils/record'
 import RecordButton from '~/components/RecordButton'
+import EffectBox from '~/components/EffectBox'
 
 export default {
   components: {
-    RecordButton
+    RecordButton,
+    EffectBox
   },
   data:() => ({
+    isRecorded: false,
     isActiveEffect: false,
     localStream: null,
     audioCtx: null,
@@ -60,7 +54,7 @@ export default {
     navigator.mediaDevices.getUserMedia({
       video: {
         width: 375,
-        height: 500
+        height: 375
       },
       audio: true
     })
@@ -72,9 +66,11 @@ export default {
     effectProcessing() {
       if (this.isActiveEffect) {
         this.audioCtx.close()
+        this.isActiveEffect = false
         return
       }
 
+      this.isActiveEffect = true
       this.audioCtx = new AudioContext()
       const biquadFilter = this.audioCtx.createBiquadFilter();
       biquadFilter.type = 'highshelf';     // ハイシェルフフィルター
@@ -84,6 +80,14 @@ export default {
       const mediaStreamSource = this.audioCtx.createMediaStreamSource(this.localStream)
       mediaStreamSource.connect(biquadFilter)
       biquadFilter.connect(this.audioCtx.destination)
+    },
+    handleRecord() {
+      if (this.isRecorded) {
+        this.stopRecording()
+        return
+      }
+      this.startRecording()
+      this.isRecorded = true
     },
     startRecording() {
       record.startRec(this.localStream)
@@ -98,11 +102,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  background-color: black;
-  height: 7rem;
+.recording__container {
+  background-color: #000;
+  height: 100vh;
+}
+
+.recording_video__container {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 70vh;
+}
+
+.recording_button__container {
+  background-color: black;
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.effect_box__container {
+  display: flex;
+  justify-content: space-evenly;
 }
 </style>

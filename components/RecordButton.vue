@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     handleClick() {
-      console.log('hoge')
+      this.$emit('click')
     }
   }
 
