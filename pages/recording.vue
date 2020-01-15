@@ -38,6 +38,7 @@ import { storage } from '~/plugins/firebase'
 import record from '~/utils/record'
 import RecordButton from '~/components/RecordButton'
 import EffectBox from '~/components/EffectBox'
+import { mapActions } from 'vuex'
 
 const organismStorageRef = storage.ref('organisms')
 
@@ -67,6 +68,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions('post', ['addOrganismUrl']),
     effectProcessing() {
       if (this.isActiveEffect) {
         this.audioCtx.close()
@@ -113,7 +115,7 @@ export default {
       })
       await organismRef.getDownloadURL().then(url => {
         // url を Vuex に追加
-        console.log(url)
+        this.addOrganismUrl(url)
       })
     }
   }
