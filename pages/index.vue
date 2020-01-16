@@ -1,8 +1,5 @@
 <template>
   <div>
-    <h1 class="heading">
-      ONGAKU
-    </h1>
     <div class="post_organism__container">
       <!-- 以下コンポーネント化 -->
       <div
@@ -19,9 +16,9 @@
           />
         </div>
         <div class="post_organism__feature">
-          <div class="post_organism__feature__play_button">
+          <!-- <div class="post_organism__feature__play_button">
             再生 ▶
-          </div>
+          </div> -->
           <div class="post_organism__feature__info">
             <h2>{{ post.title }}</h2>
             <p>{{ post.place }}</p>
@@ -30,9 +27,9 @@
         </div>
       </div>
     </div>
-    <div class="recording">
+    <div class="recording__container">
       <div
-        class="icon_record"
+        class="recording_icon"
         @click="linkToRecording()"
       >
         ＋
@@ -64,14 +61,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.heading {
-  font-family: 'Comfortaa';
-  color: $color-black;
-  font-size: 4.2rem;
-  padding: 1.4rem;
-  text-align: center;
-}
-.recording {
+.recording__container {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -79,8 +70,10 @@ export default {
   background-color: $bg-black-color;
   text-align: center;
   font-size: 2rem;
+  position: fixed;
+  bottom: 0;
 }
-.icon_record {
+.recording_icon {
   font-size: 3.6rem;
   font-weight: bold;
   color: $color-white;
@@ -93,28 +86,33 @@ export default {
 }
 
 .post_organism__container {
-  max-width: 42rem;
+  max-width: 60rem;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   margin: auto;
+  margin-bottom: 8rem;
 }
 
 .post_organism {
-  margin: 0 1rem 3rem;
+  margin: 0 1.6rem 3rem;
   border: .1rem solid $color-black;
   border-radius: 1.2rem;
 }
 
 .organism__container {
   width: 15rem;
-  height: 16rem;
-  border-radius: 1rem;
+  height: 15rem;
+  border-radius: 1rem 1rem 0 0;
   overflow: hidden;
 }
 
 .post_organism__feature {
   display: flex;
   justify-content: space-between;
+}
+
+.post_organism__feature__info {
+  padding: .5rem;
 }
 </style>
