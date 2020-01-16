@@ -101,6 +101,9 @@ export default {
       record.startRec(this.localStream)
     },
     async stopRecording() {
+      if (this.audioCtx) {
+        this.audioCtx.close()
+      }
       this.organismData = await record.stopRec()
       this.blobUrl = window.URL.createObjectURL(this.organismData)
       this.localStream = null
