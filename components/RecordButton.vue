@@ -48,21 +48,21 @@ export default {
     width: 5rem;
     height: 5rem;
     border-radius: 50%;
-    border: .2rem solid #fff;
+    border: .2rem solid $color-white;
   }
 
   &--inactive {
     width: 4.2rem;
     height: 4.2rem;
     border-radius: 50%;
-    background-color: #f00;
+    background-color: $color-primary;
   }
 
   &--active {
     width: 2rem;
     height: 2rem;
     border-radius: .3rem;
-    background-color: #f00;
+    background-color: $color-primary;
   }
 
 }

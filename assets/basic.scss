@@ -5,6 +5,11 @@
 }
 
 html {
-  font-family: 'Open Sans';
   font-size: 62.5%;
+}
+
+body {
+  font-family: 'Open Sans';
+  color: $text-default-color;
+  background-color: $bg-white-color;
 }

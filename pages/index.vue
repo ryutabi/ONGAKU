@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1 class="heading">ONGAKU</h1>
+    <h1 class="heading">
+      ONGAKU
+    </h1>
     <div class="post_organism__container">
       <!-- 以下コンポーネント化 -->
       <div
@@ -64,6 +66,7 @@ export default {
 <style lang="scss" scoped>
 .heading {
   font-family: 'Comfortaa';
+  color: $color-black;
   font-size: 4.2rem;
   padding: 1.4rem;
   text-align: center;
@@ -73,16 +76,16 @@ export default {
   justify-content: center;
   align-items: center;
   height: 8rem;
-  background-color: #000;
+  background-color: $bg-black-color;
   text-align: center;
   font-size: 2rem;
 }
 .icon_record {
   font-size: 3.6rem;
   font-weight: bold;
-  color: #fafafa;
-  background-color: #ff0055;
-  border: .2rem solid #fafafa;
+  color: $color-white;
+  background-color: $color-primary;
+  border: .2rem solid $color-white;
   width: 5rem;
   height: 5rem;
   line-height: 4.6rem;
@@ -99,7 +102,7 @@ export default {
 
 .post_organism {
   margin: 0 1rem 3rem;
-  border: .1rem solid #000;
+  border: .1rem solid $color-black;
   border-radius: 1.2rem;
 }
 
@@ -109,7 +112,6 @@ export default {
   border-radius: 1rem;
   overflow: hidden;
 }
-
 
 .post_organism__feature {
   display: flex;
