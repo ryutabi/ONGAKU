@@ -90,7 +90,7 @@ export default {
       postsCollection.doc(this.postId).set(submitPostData)
       .then(() => {
         console.log(`success!! post ID: ${this.postId}`)
-        // this.$router.push('/')
+        this.$router.push('/')
       })
     }
   }

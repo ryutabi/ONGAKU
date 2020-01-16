@@ -35,14 +35,14 @@ export default {
   height: 5rem;
   line-height: 5rem;
   text-align: center;
-  border: .2rem solid #fafafa;
+  border: .2rem solid $color-white;
   border-radius: .8rem;
   color: #fafafa;
   font-size: 1.4rem;
 }
 
 .is_active {
-  background-color: #fafafa;
-  color: #000;
+  background-color:$color-white;
+  color: $color-black;
 }
 </style>

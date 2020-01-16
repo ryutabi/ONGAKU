@@ -126,7 +126,7 @@ export default {
 
 <style lang="scss" scoped>
 .recording__container {
-  background-color: #000;
+  background-color: $bg-black-color;
   height: 100vh;
 }
 
@@ -138,7 +138,7 @@ export default {
 }
 
 .recording_button__container {
-  background-color: black;
+  background-color: $bg-black-color;
   height: 20vh;
   display: flex;
   justify-content: center;
