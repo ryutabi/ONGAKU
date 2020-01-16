@@ -37,7 +37,7 @@ export default {
   text-align: center;
   border: .2rem solid $color-white;
   border-radius: .8rem;
-  color: #fafafa;
+  color: $color-white;
   font-size: 1.4rem;
 }
 

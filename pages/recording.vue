@@ -5,6 +5,7 @@
         <video
           :srcObject.prop="localStream"
           autoplay
+          playsinline="true"
         />
       </div>
       <div v-if="blobUrl">
@@ -43,6 +44,7 @@ import { mapActions } from 'vuex'
 const organismStorageRef = storage.ref('organisms')
 
 export default {
+  layout: 'blank',
   components: {
     RecordButton,
     EffectBox
@@ -126,7 +128,7 @@ export default {
 
 <style lang="scss" scoped>
 .recording__container {
-  background-color: $bg-black-color;
+  background-color: $bg-black;
   height: 100vh;
 }
 
@@ -138,11 +140,11 @@ export default {
 }
 
 .recording_button__container {
-  background-color: $bg-black-color;
-  height: 20vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  background-color: $bg-black;
+  width: 100%;
+  padding-bottom: 5rem;
+  position: fixed;
+  bottom: 0;
 }
 
 .effect_box__container {

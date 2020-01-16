@@ -20,9 +20,9 @@
             再生 ▶
           </div> -->
           <div class="post_organism__feature__info">
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.place }}</p>
-            <p>{{ post.recording_target }}</p>
+            <h3>{{ post.title }}</h3>
+            <p>@{{ post.place }}</p>
+            <p>#{{ post.recording_target }}</p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 8rem;
-  background-color: $bg-black-color;
+  background-color: $bg-black;
   text-align: center;
   font-size: 2rem;
   position: fixed;

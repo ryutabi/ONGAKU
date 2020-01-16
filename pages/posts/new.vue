@@ -3,47 +3,39 @@
     <div class="playback__container">
       <video
         :src="organismUrl"
-        width="240"
-        height="240"
+        width="300"
+        height="300"
         controls
       />
     </div>
     <div class="new_post">
-      <form>
-        <input
+      <form class="new_post__input_form">
+        <app-input
           v-model="postData.title"
-          type="text"
-          value="Title"
-        >
-        <input
-          v-model="postData.place"
-          type="text"
-          value="Place"
-        >
-        <span>
-          What is the recording target?
-        </span>
-        <textarea
-          v-model="postData.target"
-          cols="20"
-          rows="5"
+          inner-label="Title"
         />
-        <span>
-          How are your feeling now?
-        </span>
-        <textarea
-          v-model="postData.feeling"
-          cols="20"
-          rows="5"
+        <app-input
+          v-model="postData.place"
+          inner-label="Place"
+        />
+        <app-textaria
+          inner-label="What is the recording target?"
+        />
+        <app-textaria
+          inner-label="How are your feeling now?"
         />
       </form>
       <div class="new_post__button__container">
-        <button>
-          CANCEL
-        </button>
-        <button @click="postSubmit()">
-          POST
-        </button>
+        <app-button
+          text="Cancel"
+          color="gray"
+          @click="postCancel()"
+        />
+        <app-button
+          text="Submit"
+          color="red"
+          @click="postSubmit()"
+        />
       </div>
     </div>
   </div>
@@ -52,10 +44,19 @@
 <script>
 import { mapState } from 'vuex'
 import { db } from '~/plugins/firebase'
+import AppInput from '~/components/AppInput'
+import AppTextaria from '~/components/AppTextaria'
+import AppButton from '~/components/AppButton'
 
 const postsCollection = db.collection('posts')
 
 export default {
+  layout: 'blank',
+  components: {
+    AppInput,
+    AppTextaria,
+    AppButton
+  },
   data:() => ({
     postData: {
       title: '',
@@ -92,6 +93,9 @@ export default {
         console.log(`success!! post ID: ${this.postId}`)
         this.$router.push('/')
       })
+    },
+    postCancel() {
+      this.$router.push('/')
     }
   }
 
@@ -99,7 +103,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  input, textarea {
-    display: block;
+.new_post__container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.playback__container {
+  margin: 0 auto;
+  background-color: $bg-black;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.new_post {
+  width: 30rem;
+  margin: 0 auto;
+
+  &__input_form {
+    font-size: 1.4rem;
+    padding: 1rem 0;
   }
+
+  &__button__container {
+    display: flex;
+    justify-content: space-evenly;
+  }
+}
 </style>
