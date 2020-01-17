@@ -5,6 +5,7 @@
       class="app_textaria"
       :cols="cols"
       :rows="rows"
+      @input="updateValue"
     />
   </div>
 </template>
@@ -24,6 +25,11 @@ export default {
     rows: {
       type: Number,
       default: 5
+    }
+  },
+  methods: {
+    updateValue(event) {
+      this.$emit('input', event.target.value)
     }
   }
 

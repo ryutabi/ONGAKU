@@ -5,6 +5,7 @@
       class="app_input"
       :type="type"
       :value="value"
+      @input="updateValue"
     >
   </div>
 </template>
@@ -25,8 +26,12 @@ export default {
       type: [String, Number],
       default: null
     }
+  },
+  methods: {
+    updateValue(event) {
+      this.$emit('input', event.target.value)
+    }
   }
-
 }
 </script>
 
