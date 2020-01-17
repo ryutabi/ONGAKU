@@ -67,6 +67,10 @@ export default {
       this.localStream = stream
     })
   },
+  beforeDestroy() {
+    this.localStream.getVideoTracks().forEach(track => track.stop())
+    this.localStream.getAudioTracks().forEach(track => track.stop())
+  },
   methods: {
     ...mapActions('post', ['addPostId', 'addOrganismUrl']),
     effectProcessing() {
@@ -99,12 +103,8 @@ export default {
       record.startRec(this.localStream)
     },
     async stopRecording() {
-      if (this.audioCtx) {
-        this.audioCtx.close()
-      }
       this.organismData = await record.stopRec()
       this.blobUrl = window.URL.createObjectURL(this.organismData)
-      this.localStream = null
       this.uploadOrganism(this.organismData).then(() => {
         console.log('アップ成功！！')
         // 新規投稿画面に遷移
