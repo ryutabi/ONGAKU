@@ -7,3 +7,14 @@
 html {
   font-size: 62.5%;
 }
+
+body {
+  font-family: 'Open Sans';
+  color: $text-default-color;
+  background-color: $bg-white;
+  font-size: 1.4rem;
+}
+
+textarea {
+  resize: none;
+}

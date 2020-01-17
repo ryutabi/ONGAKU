@@ -5,6 +5,7 @@
         <video
           :srcObject.prop="localStream"
           autoplay
+          playsinline="true"
         />
       </div>
       <div v-if="blobUrl">
@@ -12,8 +13,6 @@
           :src="blobUrl"
           width="375"
           height="375"
-          autoplay
-          controls
         />
       </div>
     </div>
@@ -34,11 +33,16 @@
 </template>
 
 <script>
+import { storage } from '~/plugins/firebase'
 import record from '~/utils/record'
 import RecordButton from '~/components/RecordButton'
 import EffectBox from '~/components/EffectBox'
+import { mapActions } from 'vuex'
+
+const organismStorageRef = storage.ref('organisms')
 
 export default {
+  layout: 'blank',
   components: {
     RecordButton,
     EffectBox
@@ -47,6 +51,7 @@ export default {
     isRecorded: false,
     isActiveEffect: false,
     localStream: null,
+    organismData: null,
     audioCtx: null,
     blobUrl: null
   }),
@@ -62,7 +67,12 @@ export default {
       this.localStream = stream
     })
   },
+  beforeDestroy() {
+    this.localStream.getVideoTracks().forEach(track => track.stop())
+    this.localStream.getAudioTracks().forEach(track => track.stop())
+  },
   methods: {
+    ...mapActions('post', ['addPostId', 'addOrganismUrl']),
     effectProcessing() {
       if (this.isActiveEffect) {
         this.audioCtx.close()
@@ -93,9 +103,25 @@ export default {
       record.startRec(this.localStream)
     },
     async stopRecording() {
-      const res = await record.stopRec()
-      this.blobUrl = window.URL.createObjectURL(res)
-      this.localStream = null
+      this.organismData = await record.stopRec()
+      this.blobUrl = window.URL.createObjectURL(this.organismData)
+      this.uploadOrganism(this.organismData).then(() => {
+        console.log('アップ成功！！')
+        // 新規投稿画面に遷移
+        this.$router.push('/posts/new')
+      })
+    },
+    async uploadOrganism(data) {
+      // id: 現在時刻のミリ秒表記
+      const id = String(new Date().getTime())
+      const organismRef = organismStorageRef.child(id)
+      await organismRef.put(data).then(snapshot => {
+        console.log(`added firebase storage: ${snapshot.state}!!`)
+      })
+      await organismRef.getDownloadURL().then(url => {
+        this.addPostId(id)
+        this.addOrganismUrl(url)
+      })
     }
   }
 }
@@ -103,7 +129,7 @@ export default {
 
 <style lang="scss" scoped>
 .recording__container {
-  background-color: #000;
+  background-color: $bg-black;
   height: 100vh;
 }
 
@@ -115,11 +141,11 @@ export default {
 }
 
 .recording_button__container {
-  background-color: black;
-  height: 20vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  background-color: $bg-black;
+  width: 100%;
+  padding-bottom: 5rem;
+  position: fixed;
+  bottom: 0;
 }
 
 .effect_box__container {
