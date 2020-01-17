@@ -13,8 +13,6 @@
           :src="blobUrl"
           width="375"
           height="375"
-          autoplay
-          controls
         />
       </div>
     </div>

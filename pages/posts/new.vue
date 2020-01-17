@@ -19,9 +19,11 @@
           inner-label="Place"
         />
         <app-textaria
+          v-model="postData.target"
           inner-label="What is the recording target?"
         />
         <app-textaria
+          v-model="postData.feeling"
           inner-label="How are your feeling now?"
         />
       </form>
