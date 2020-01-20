@@ -56,15 +56,25 @@ export default {
     blobUrl: null
   }),
   created() {
+    if (navigator.mediaDevices) {
+      alert("Media device supported");
+    } else {
+      alert("Media device not supported");
+    }
+
     navigator.mediaDevices.getUserMedia({
       video: {
         width: 375,
-        height: 375
+        height: 375,
+        facingMode: { exact: "environment" }
       },
       audio: true
     })
     .then(stream => {
       this.localStream = stream
+    })
+    .catch(e => {
+      alert(e)
     })
   },
   beforeDestroy() {
@@ -81,7 +91,7 @@ export default {
       }
 
       this.isActiveEffect = true
-      this.audioCtx = new AudioContext()
+      this.audioCtx = new(window.AudioContext || window.webkitAudioContext)
       const biquadFilter = this.audioCtx.createBiquadFilter();
       biquadFilter.type = 'highshelf';     // ハイシェルフフィルター
       biquadFilter.frequency.value = 1000; // 周波数閾値
