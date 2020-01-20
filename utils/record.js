@@ -1,7 +1,8 @@
 let mediaRecorder = null
 
 const startRec = stream => {
-  const options = { mimeType: 'video/webm;codecs=vp8'}
+  // const options = { mimeType: 'video/webm;codecs=vp8'}
+  const options = { mimeType: 'video/mp4; codecs=avc1.640028'}
   mediaRecorder = new MediaRecorder(stream, options)
   mediaRecorder.start()
 }
