@@ -1,19 +1,16 @@
 let mediaRecorder = null
 
 const startRec = stream => {
-  const options = { mimeType: 'video/webm;codecs=vp8'}
-  mediaRecorder = new MediaRecorder(stream, options)
+  mediaRecorder = new MediaStreamRecorder(stream)
+  mediaRecorder.mimeType = 'video/mp4'
   mediaRecorder.start()
 }
 
 const stopRec = () => {
   return new Promise(resolve => {
     mediaRecorder.stop()
-    mediaRecorder.ondataavailable = e => {
-      if (e.data && e.data.size > 0) {
-        const blob = new Blob([e.data], { type: "video/webm" })
-        resolve(blob)
-      }
+    mediaRecorder.ondataavailable = blob => {
+      resolve(blob)
     }
   })
 }
