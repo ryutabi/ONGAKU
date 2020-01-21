@@ -4,6 +4,8 @@
       <div v-show="!blobUrl">
         <video
           :srcObject.prop="localStream"
+          width="375"
+          height="375"
           autoplay
           playsinline="true"
         />
@@ -47,6 +49,11 @@ export default {
     RecordButton,
     EffectBox
   },
+  head: {
+    script: [
+      { src: 'https://cdn.webrtc-experiment.com/MediaStreamRecorder.js' }
+    ]
+  },
   data:() => ({
     isRecorded: false,
     isActiveEffect: false,
@@ -63,7 +70,8 @@ export default {
     }
 
     navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { exact: "environment" }},
+      // video: { facingMode: { exact: "environment" }},
+      video: true,
       audio: true
     })
     .then(stream => {
