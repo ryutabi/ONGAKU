@@ -11,10 +11,9 @@
         />
       </div>
       <div v-if="blobUrl">
-        <video
+        <audio
           :src="blobUrl"
-          width="375"
-          height="375"
+          controls
         />
       </div>
     </div>
@@ -36,7 +35,7 @@
 
 <script>
 import { storage } from '~/plugins/firebase'
-import record from '~/utils/record'
+import { startRec, stopRec } from '~/utils/record'
 import RecordButton from '~/components/RecordButton'
 import EffectBox from '~/components/EffectBox'
 import { mapActions } from 'vuex'
@@ -63,26 +62,26 @@ export default {
     blobUrl: null
   }),
   created() {
-    if (navigator.mediaDevices) {
-      alert("Media device supported");
-    } else {
-      alert("Media device not supported");
+    if (!navigator.mediaDevices) {
+      alert("Media device is not supported")
+      return
     }
 
+    window.AudioContext = window.AudioContext || window.webkitAudioContext
+
     navigator.mediaDevices.getUserMedia({
-      // video: { facingMode: { exact: "environment" }},
-      video: true,
-      audio: true
+      audio: true,
+      video: false
     })
     .then(stream => {
       this.localStream = stream
+      this.audioCtx = new AudioContext()
     })
     .catch(e => {
       alert(e)
     })
   },
   beforeDestroy() {
-    this.localStream.getVideoTracks().forEach(track => track.stop())
     this.localStream.getAudioTracks().forEach(track => track.stop())
   },
   methods: {
@@ -95,7 +94,6 @@ export default {
       }
 
       this.isActiveEffect = true
-      this.audioCtx = new AudioContext() || new webkitAudioContext()
       const biquadFilter = this.audioCtx.createBiquadFilter();
       biquadFilter.type = 'highshelf';     // ハイシェルフフィルター
       biquadFilter.frequency.value = 1000; // 周波数閾値
@@ -110,14 +108,15 @@ export default {
         this.stopRecording()
         return
       }
+
       this.startRecording()
       this.isRecorded = true
     },
     startRecording() {
-      record.startRec(this.localStream)
+      startRec(this.localStream, this.audioCtx)
     },
     async stopRecording() {
-      this.organismData = await record.stopRec()
+      this.organismData = await stopRec()
       this.blobUrl = window.URL.createObjectURL(this.organismData)
       this.uploadOrganism(this.organismData).then(() => {
         console.log('アップ成功！！')

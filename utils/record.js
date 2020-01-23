@@ -1,23 +1,30 @@
-let mediaRecorder = null
+import exportWAV from '~/utils/export_wav.js'
 
-const startRec = stream => {
-  mediaRecorder = new MediaStreamRecorder(stream)
-  mediaRecorder.mimeType = 'video/mp4'
-  mediaRecorder.start()
+const audioData = []
+const bufferSize = 2048
+let sampleRate
+
+const onAudioProcess = e => {
+  const input = e.inputBuffer.getChannelData(0)
+  const bufferData = new Float32Array(bufferSize)
+  for (let i = 0; i < bufferSize; i++) {
+    bufferData[i] = input[i]
+  }
+  audioData.push(bufferData)
+}
+
+
+const startRec = (stream, ctx) => {
+  const scriptProcessor = ctx.createScriptProcessor(bufferSize, 1, 1)
+  const mediaStreamSource = ctx.createMediaStreamSource(stream)
+  sampleRate = ctx.sampleRate
+  mediaStreamSource.connect(scriptProcessor)
+  scriptProcessor.onaudioprocess = onAudioProcess
+  scriptProcessor.connect(ctx.destination)
 }
 
 const stopRec = () => {
-  return new Promise(resolve => {
-    mediaRecorder.stop()
-    mediaRecorder.ondataavailable = blob => {
-      resolve(blob)
-    }
-  })
+  return new Promise(resolve => resolve(exportWAV(audioData, sampleRate)))
 }
 
-const record = {
-  startRec,
-  stopRec
-}
-
-export default record
+export { startRec, stopRec }
