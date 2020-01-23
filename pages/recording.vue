@@ -118,12 +118,11 @@ export default {
     async stopRecording() {
       this.organismData = await stopRec()
       this.blobUrl = window.URL.createObjectURL(this.organismData)
-      console.log(this.organismData)
-      // this.uploadOrganism(this.organismData).then(() => {
-      //   console.log('アップ成功！！')
-      //   // 新規投稿画面に遷移
-      //   this.$router.push('/posts/new')
-      // })
+      this.uploadOrganism(this.organismData).then(() => {
+        console.log('アップ成功！！')
+        // 新規投稿画面に遷移
+        this.$router.push('/posts/new')
+      })
     },
     async uploadOrganism(data) {
       // id: 現在時刻のミリ秒表記
