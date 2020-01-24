@@ -3,15 +3,16 @@
     <div class="taking_image__camera">
       <video
         ref="camera"
-        width="360"
+        width="320"
         height="240"
+        playsinline="true"
       />
     </div>
 
     <div>
       <canvas
         ref="image"
-        width="360"
+        width="320"
         height="240"
       />
     </div>
@@ -28,6 +29,8 @@
 <script>
 import PhotoButton from '~/components/PhotoButton'
 
+window.addEventListener('click', e => {console.log(e)})
+
 export default {
   layout: 'blank',
   components: {
@@ -38,14 +41,14 @@ export default {
   created() {
     navigator.mediaDevices.getUserMedia({
       // video: true,
-      video: { width: 360, height: 240 },
-      // facingMode: { exact: "environment" },
+      facingMode: { exact: "environment" },
       audio: false
     })
     .then(stream => {
       this.$refs.camera.srcObject = stream
+      this.$refs.camera.width = 320
+      this.$refs.camera.height = 240
       this.$refs.camera.play()
-      // console.log(this.$refs.camera.offsetWidth, this.$refs.camera.offsetHeight)
     })
   },
   methods: {
@@ -55,7 +58,7 @@ export default {
       setTimeout(camera.play(), 500)
       const ctx = this.$refs.image.getContext('2d')
       const thumbnailImage = camera
-      ctx.drawImage(camera, 0, 0, 360, 240)
+      ctx.drawImage(camera, 0, 0, 320, 240)
     }
   }
 
