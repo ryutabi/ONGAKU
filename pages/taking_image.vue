@@ -1,5 +1,21 @@
 <template>
   <div class="taking_image__container">
+    <div class="taking_image__camera">
+      <video
+        ref="camera"
+        width="360"
+        height="240"
+      />
+    </div>
+
+    <div>
+      <canvas
+        ref="image"
+        width="360"
+        height="240"
+      />
+    </div>
+
     <div class="photo_button__container">
       <photo-button
         class="photo_button"
@@ -17,12 +33,29 @@ export default {
   components: {
     PhotoButton
   },
+  data:() => ({
+  }),
   created() {
-
+    navigator.mediaDevices.getUserMedia({
+      // video: true,
+      video: { width: 360, height: 240 },
+      // facingMode: { exact: "environment" },
+      audio: false
+    })
+    .then(stream => {
+      this.$refs.camera.srcObject = stream
+      this.$refs.camera.play()
+      // console.log(this.$refs.camera.offsetWidth, this.$refs.camera.offsetHeight)
+    })
   },
   methods: {
     takeImage() {
-      console.log('撮影！！')
+      const camera = this.$refs.camera
+      camera.pause()
+      setTimeout(camera.play(), 500)
+      const ctx = this.$refs.image.getContext('2d')
+      const thumbnailImage = camera
+      ctx.drawImage(camera, 0, 0, 360, 240)
     }
   }
 
