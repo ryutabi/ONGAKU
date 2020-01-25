@@ -3,7 +3,6 @@
     <div class="photo_button--outside">
       <div
         class="photo_button--inside"
-        ontouchstart=""
         @click="handleClick"
       />
     </div>
