@@ -3,6 +3,7 @@
     <div class="taking_image__camera">
       <video
         ref="camera"
+        :srcObject.prop="localStream"
         width="320"
         height="240"
         playsinline="true"
@@ -36,6 +37,9 @@ export default {
   components: {
     PhotoButton
   },
+  data:() => ({
+    localStream: null
+  }),
   created() {
     navigator.mediaDevices.getUserMedia({
       // video: true,
@@ -43,25 +47,27 @@ export default {
       audio: false
     })
     .then(stream => {
-      console.log('get stream')
-      this.$refs.camera.srcObject = stream
+      alert('get stream')
+      this.localStream = stream
+      // this.$refs.camera.srcObject = stream
       this.$refs.camera.play()
-      console.log('camera play')
+      alert('camera play')
     })
     .catch(e => {
-      console.log(e)
+      alert(e)
+      alert('can not get stream')
     })
   },
   methods: {
     takeImage() {
       // const camera = this.$refs.camera
       this.$refs.camera.pause()
-      console.log('camera pause')
+      alert('camera pause')
       setTimeout(this.$refs.camera.play(), 500)
       const ctx = this.$refs.image.getContext('2d')
       // const thumbnailImage = camera
       ctx.drawImage(this.$refs.camera, 0, 0, 320, 240)
-      console.log('get photo')
+      alert('get photo')
     }
   }
 
