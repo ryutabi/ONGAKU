@@ -3,6 +3,8 @@
     <div class="taking_image__camera">
       <video
         ref="camera"
+        width="320"
+        height="240"
         playsinline="true"
       />
     </div>
@@ -43,8 +45,10 @@ export default {
       audio: false
     })
     .then(stream => {
+      console.log('get stream')
       this.$refs.camera.srcObject = stream
       this.$refs.camera.play()
+      console.log('camera play')
     })
     .catch(e => {
       console.log(e)
@@ -54,10 +58,12 @@ export default {
     takeImage() {
       // const camera = this.$refs.camera
       this.$refs.camera.pause()
+      console.log('camera pause')
       setTimeout(this.$refs.camera.play(), 500)
       const ctx = this.$refs.image.getContext('2d')
       // const thumbnailImage = camera
       ctx.drawImage(this.$refs.camera, 0, 0, 320, 240)
+      console.log('get photo')
     }
   }
 
