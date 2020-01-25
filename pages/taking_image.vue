@@ -3,8 +3,6 @@
     <div class="taking_image__camera">
       <video
         ref="camera"
-        width="320"
-        height="240"
         playsinline="true"
       />
     </div>
@@ -29,7 +27,7 @@
 <script>
 import PhotoButton from '~/components/PhotoButton'
 
-window.addEventListener('click', e => {console.log(e)})
+// window.addEventListener('click', e => {console.log(e)})
 
 export default {
   layout: 'blank',
@@ -46,19 +44,20 @@ export default {
     })
     .then(stream => {
       this.$refs.camera.srcObject = stream
-      this.$refs.camera.width = 320
-      this.$refs.camera.height = 240
       this.$refs.camera.play()
+    })
+    .catch(e => {
+      console.log(e)
     })
   },
   methods: {
     takeImage() {
-      const camera = this.$refs.camera
-      camera.pause()
-      setTimeout(camera.play(), 500)
+      // const camera = this.$refs.camera
+      this.$refs.camera.pause()
+      setTimeout(this.$refs.camera.play(), 500)
       const ctx = this.$refs.image.getContext('2d')
-      const thumbnailImage = camera
-      ctx.drawImage(camera, 0, 0, 320, 240)
+      // const thumbnailImage = camera
+      ctx.drawImage(this.$refs.camera, 0, 0, 320, 240)
     }
   }
 
