@@ -38,8 +38,8 @@ export default {
   },
   created() {
     navigator.mediaDevices.getUserMedia({
-      video: true,
-      // facingMode: { exact: "environment" },
+      // video: true,
+      facingMode: { exact: "environment" },
       audio: false
     })
     .then(stream => {
