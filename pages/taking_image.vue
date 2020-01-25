@@ -3,13 +3,11 @@
     <div class="taking_image__camera">
       <video
         ref="camera"
-        width="320"
-        height="240"
         playsinline="true"
       />
     </div>
 
-    <div>
+    <div class="thumbnail_image__container">
       <canvas
         ref="image"
         width="320"
@@ -29,7 +27,7 @@
 <script>
 import PhotoButton from '~/components/PhotoButton'
 
-// window.addEventListener('click', e => {console.log(e)})
+window.addEventListener('click', e => {console.log(e)})
 
 export default {
   layout: 'blank',
@@ -43,26 +41,25 @@ export default {
       audio: false
     })
     .then(stream => {
-      alert('get stream')
       this.$refs.camera.srcObject = stream
       this.$refs.camera.play()
-      alert('camera play')
     })
     .catch(e => {
       alert(e)
-      alert('can not get stream')
     })
   },
   methods: {
     takeImage() {
       // const camera = this.$refs.camera
       this.$refs.camera.pause()
-      alert('camera pause')
       setTimeout(this.$refs.camera.play(), 500)
       const ctx = this.$refs.image.getContext('2d')
-      // const thumbnailImage = camera
+      const thumbnailImage = this.$refs.image
       ctx.drawImage(this.$refs.camera, 0, 0, 320, 240)
-      alert('get photo')
+      const blob = thumbnailImage.toBlob(blob => {
+        alert(blob.size)
+        alert(blob.type)
+      })
     }
   }
 
@@ -73,6 +70,16 @@ export default {
 .taking_image__container {
   background-color: $bg-black;
   height: 100vh;
+}
+
+.taking_image__camera {
+  display: flex;
+  justify-content: center;
+}
+
+.thumbnail_image__container {
+  display: flex;
+  justify-content: center;
 }
 
 .photo_button {
