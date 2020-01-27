@@ -22,6 +22,12 @@
         class="photo_button"
         @click="takeImage"
       />
+      <div class="cameraBtn">
+        <label for="cam">
+          カメラ起動
+        </label>
+        <input id="cam" type="file" accept="image/*" capture="environment" value="Camera" />
+      </div>
     </div>
   </div>
 </template>
@@ -123,4 +129,8 @@ export default {
   position: fixed;
   bottom:0;
 }
+
+.cameraBtn {
+  color: #fff;
+} 
 </style>
