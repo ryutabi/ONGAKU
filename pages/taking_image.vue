@@ -3,6 +3,8 @@
     <div class="taking_image__camera">
       <video
         ref="camera"
+        :width="getDeviceWidth"
+        :height="getCameraHeight"
         playsinline="true"
       />
     </div>
@@ -10,8 +12,8 @@
     <div class="thumbnail_image__container">
       <canvas
         ref="image"
-        width="320"
-        height="240"
+        :width="getDeviceWidth"
+        :height="getCameraHeight"
       />
     </div>
 
@@ -34,6 +36,16 @@ export default {
   components: {
     PhotoButton
   },
+  computed: {
+    getDeviceWidth() {
+      const screenWidth = window.parent.screen.width
+      if (screenWidth > 640) return 640
+      return screenWidth
+    },
+    getCameraHeight() {
+      return this.getDeviceWidth / 4 * 3
+    }
+  },
   created() {
     navigator.mediaDevices.getUserMedia({
       // video: true,
@@ -50,13 +62,11 @@ export default {
   },
   methods: {
     takeImage() {
-      // const camera = this.$refs.camera
-      this.$refs.camera.pause()
-      setTimeout(this.$refs.camera.play(), 500)
+      const camera = this.$refs.camera
+      camera.pause()
       const ctx = this.$refs.image.getContext('2d')
-      const thumbnailImage = this.$refs.image
-      ctx.drawImage(this.$refs.camera, 0, 0, 320, 240)
-      const blob = thumbnailImage.toBlob(blob => {
+      ctx.drawImage(camera, 0, 0, this.getDeviceWidth, this.getCameraHeight)
+      const blob = this.$refs.image.toBlob(blob => {
         alert(blob.size)
         alert(blob.type)
       })
@@ -75,6 +85,25 @@ export default {
 .taking_image__camera {
   display: flex;
   justify-content: center;
+  position: relative;
+}
+
+.camera_mask--top {
+  background-color: #000;
+  opacity: 0.7;
+  width: 100vw;
+  height: 10rem;
+  position: absolute;
+  top: 0;
+}
+
+.camera_mask--bottom {
+  background-color: #000;
+  opacity: 0.7;
+  width: 100vw;
+  height: 10rem;
+  position: absolute;
+  bottom: 0;
 }
 
 .thumbnail_image__container {
@@ -87,7 +116,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 5rem 0;
+    padding-bottom: 5rem;
   }
   position: fixed;
   bottom:0;
