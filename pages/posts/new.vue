@@ -5,7 +5,11 @@
       :style="thumbnailImage"
     >
       <div>
-        <label for="camera">CAMERA</label>
+        <label for="camera">
+          <icon-camera
+            :class="{'icon--active': isThumbnailUrl}"
+          />
+        </label>
         <input
           v-show="false"
           id="camera"
@@ -57,6 +61,7 @@ import { db } from '~/plugins/firebase'
 import AppInput from '~/components/AppInput'
 import AppTextaria from '~/components/AppTextaria'
 import AppButton from '~/components/AppButton'
+import IconCamera from '~/components/Icons/IconCamera'
 
 const postsCollection = db.collection('posts')
 
@@ -65,7 +70,8 @@ export default {
   components: {
     AppInput,
     AppTextaria,
-    AppButton
+    AppButton,
+    IconCamera
   },
   data:() => ({
     postData: {
@@ -83,6 +89,12 @@ export default {
     }),
     thumbnailImage() {
       return `background-image: url(${this.thumbnailImageUrl})`
+    },
+    isThumbnailUrl() {
+      if (this.thumbnailImageUrl) {
+        return true
+      }
+      return false
     }
   },
   methods: {
@@ -138,7 +150,8 @@ export default {
   background-size: cover;
 }
 
-.thumbnail_image {
+.icon--active {
+  opacity: 0.5;
 }
 
 .new_post {
