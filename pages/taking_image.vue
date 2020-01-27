@@ -1,6 +1,6 @@
 <template>
   <div class="taking_image__container">
-    <div class="taking_image__camera">
+    <!-- <div class="taking_image__camera">
       <video
         ref="camera"
         :width="getDeviceWidth"
@@ -21,27 +21,31 @@
       <photo-button
         class="photo_button"
         @click="takeImage"
-      />
+      /> -->
       <div class="cameraBtn">
         <label for="cam">
           カメラ起動
         </label>
-        <input id="cam" type="file" accept="image/*" capture="environment" value="Camera" />
+        <input
+          id="cam"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          @change="getImageData"
+        />
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
-import PhotoButton from '~/components/PhotoButton'
-
-window.addEventListener('click', e => {console.log(e)})
+// import PhotoButton from '~/components/PhotoButton'
 
 export default {
   layout: 'blank',
-  components: {
-    PhotoButton
-  },
+  // components: {
+  //   PhotoButton
+  // },
   computed: {
     getDeviceWidth() {
       const screenWidth = window.parent.screen.width
@@ -52,22 +56,20 @@ export default {
       return this.getDeviceWidth / 4 * 3
     }
   },
-  created() {
-    navigator.mediaDevices.getUserMedia({
-      // video: true,
-      video: { facingMode: { exact: "environment" } },
-      audio: false
-    })
-    .then(stream => {
-      this.$refs.camera.srcObject = stream
-      this.$refs.camera.play()
-      alert(this.$refs.camera.width)
-      alert(this.$refs.camera.height)
-    })
-    .catch(e => {
-      alert(e)
-    })
-  },
+  // created() {
+  //   navigator.mediaDevices.getUserMedia({
+  //     video: true,
+  //     // video: { facingMode: { exact: "environment" } },
+  //     audio: false
+  //   })
+  //   .then(stream => {
+  //     this.$refs.camera.srcObject = stream
+  //     this.$refs.camera.play()
+  //   })
+  //   .catch(e => {
+  //     alert(e)
+  //   })
+  // },
   methods: {
     takeImage() {
       const camera = this.$refs.camera
@@ -78,6 +80,11 @@ export default {
         alert(blob.size)
         alert(blob.type)
       })
+    },
+    getImageData(e) {
+      const data = e.target.files[0]
+      alert(data.size)
+      alert(data.type)
     }
   }
 
