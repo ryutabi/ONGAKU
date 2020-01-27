@@ -1,12 +1,20 @@
 <template>
   <div class="new_post__container">
-    <div class="playback__container">
-      <video
-        :src="organismUrl"
-        width="300"
-        height="300"
-        controls
-      />
+    <div
+      class="new_post__thumbnail__container"
+      :style="thumbnailImage"
+    >
+      <div>
+        <label for="camera">CAMERA</label>
+        <input
+          v-show="false"
+          id="camera"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          @change="getThumbnailImage"
+        >
+      </div>
     </div>
     <div class="new_post">
       <form class="new_post__input_form">
@@ -65,13 +73,17 @@ export default {
       place: '',
       target: '',
       feeling: ''
-    }
+    },
+    thumbnailImageUrl: null
   }),
   computed: {
     ...mapState({
       postId: store => store.post.postData.id,
       organismUrl: store => store.post.postData.organismUrl
-    })
+    }),
+    thumbnailImage() {
+      return `background-image: url(${this.thumbnailImageUrl})`
+    }
   },
   methods: {
     postSubmit() {
@@ -98,6 +110,11 @@ export default {
     },
     postCancel() {
       this.$router.push('/')
+    },
+    getThumbnailImage(e) {
+      const imageData = e.target.files[0]
+      this.thumbnailImageUrl = URL.createObjectURL(imageData)
+      console.log(imageData)
     }
   }
 
@@ -111,12 +128,17 @@ export default {
   flex-direction: column;
 }
 
-.playback__container {
-  margin: 0 auto;
+.new_post__thumbnail__container {
   background-color: $bg-black;
-  width: 100%;
+  width: 100vw;
+  height: 75vw;
   display: flex;
   justify-content: center;
+  align-items: center;
+  background-size: cover;
+}
+
+.thumbnail_image {
 }
 
 .new_post {

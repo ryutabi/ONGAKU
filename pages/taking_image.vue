@@ -1,6 +1,6 @@
 <template>
   <div class="taking_image__container">
-    <!-- <div class="taking_image__camera">
+    <div class="taking_image__camera">
       <video
         ref="camera"
         :width="getDeviceWidth"
@@ -21,7 +21,7 @@
       <photo-button
         class="photo_button"
         @click="takeImage"
-      /> -->
+      />
       <div class="cameraBtn">
         <label for="cam">
           カメラ起動
@@ -32,20 +32,20 @@
           accept="image/*"
           capture="environment"
           @change="getImageData"
-        />
+        >
       </div>
     </div>
-  <!-- </div> -->
+  </div>
 </template>
 
 <script>
-// import PhotoButton from '~/components/PhotoButton'
+import PhotoButton from '~/components/PhotoButton'
 
 export default {
   layout: 'blank',
-  // components: {
-  //   PhotoButton
-  // },
+  components: {
+    PhotoButton
+  },
   computed: {
     getDeviceWidth() {
       const screenWidth = window.parent.screen.width
