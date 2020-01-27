@@ -55,6 +55,8 @@ export default {
     .then(stream => {
       this.$refs.camera.srcObject = stream
       this.$refs.camera.play()
+      alert(this.$refs.camera.width)
+      alert(this.$refs.camera.height)
     })
     .catch(e => {
       alert(e)
