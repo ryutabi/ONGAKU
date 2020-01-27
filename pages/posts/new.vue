@@ -61,7 +61,7 @@ import { db } from '~/plugins/firebase'
 import AppInput from '~/components/AppInput'
 import AppTextaria from '~/components/AppTextaria'
 import AppButton from '~/components/AppButton'
-import IconCamera from '~/components/Icons/IconCamera'
+import IconCamera from '~/components/icons/IconCamera'
 
 const postsCollection = db.collection('posts')
 
