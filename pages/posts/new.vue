@@ -4,7 +4,7 @@
       class="new_post__thumbnail__container"
       :style="thumbnailImage"
     >
-      <div>
+      <div class="camera_control__container">
         <label for="camera">
           <icon-camera
             :class="{'icon--active': isThumbnailUrl}"
@@ -16,7 +16,7 @@
           type="file"
           accept="image/*"
           capture="environment"
-          @change="getThumbnailImage"
+          @change="inputImage"
         >
       </div>
     </div>
@@ -57,13 +57,14 @@
 
 <script>
 import { mapState } from 'vuex'
-import { db } from '~/plugins/firebase'
+import { db, storage } from '~/plugins/firebase'
 import AppInput from '~/components/AppInput'
 import AppTextaria from '~/components/AppTextaria'
 import AppButton from '~/components/AppButton'
 import IconCamera from '~/components/icons/IconCamera'
 
 const postsCollection = db.collection('posts')
+const thumbnailStorageRef = storage.ref('thumbnails')
 
 export default {
   layout: 'blank',
@@ -78,8 +79,10 @@ export default {
       title: '',
       place: '',
       target: '',
-      feeling: ''
+      feeling: '',
+      thumbnail_url: ''
     },
+    localImageData: null,
     thumbnailImageUrl: null
   }),
   computed: {
@@ -91,6 +94,7 @@ export default {
       return `background-image: url(${this.thumbnailImageUrl})`
     },
     isThumbnailUrl() {
+      console.log(this.thumbnailImageUrl)
       if (this.thumbnailImageUrl) {
         return true
       }
@@ -98,15 +102,23 @@ export default {
     }
   },
   methods: {
-    postSubmit() {
+    inputImage(e) {
+      const imageData = e.target.files[0]
+      this.localImageData = imageData
+      this.thumbnailImageUrl = URL.createObjectURL(imageData)
+    },
+    async postSubmit() {
+      await this.updateThumbnailImage(this.localImageData)
+
       const submitPostData = {
         id: this.postId,
         organism_url: this.organismUrl,
-        // user: {
-        //   name: '',
-        //   uid: '',
-        //   icon_url: ''
-        // },
+        thumbnail_url: this.postData.thumbnail_url,
+        user: {
+          name: '',
+          uid: '',
+          icon_url: ''
+        },
         title: this.postData.title,
         place: this.postData.place,
         recording_target: this.postData.target,
@@ -123,10 +135,14 @@ export default {
     postCancel() {
       this.$router.push('/')
     },
-    getThumbnailImage(e) {
-      const imageData = e.target.files[0]
-      this.thumbnailImageUrl = URL.createObjectURL(imageData)
-      console.log(imageData)
+    async updateThumbnailImage(data) {
+      const thumbnailRef = thumbnailStorageRef.child(this.postId)
+      await thumbnailRef.put(data).then(snapshot => {
+        console.log(`upload success!!: ${snapshot.state}`)
+      })
+      await thumbnailRef.getDownloadURL().then(url => {
+        this.postData.thumbnail_url = url
+      })
     }
   }
 

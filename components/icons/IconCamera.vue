@@ -20,6 +20,7 @@
 <style scoped lang="scss">
 .icon--camera {
   width: 5rem;
+  height: 5rem;
   fill: $color-white;
 }
 </style>
