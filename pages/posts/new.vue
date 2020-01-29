@@ -20,6 +20,12 @@
         >
       </div>
     </div>
+    <div class="playback__container">
+      <audio
+        :src="organismUrl"
+        controls
+      />
+    </div>
     <div class="new_post">
       <form class="new_post__input_form">
         <app-input
@@ -94,7 +100,6 @@ export default {
       return `background-image: url(${this.thumbnailImageUrl})`
     },
     isThumbnailUrl() {
-      console.log(this.thumbnailImageUrl)
       if (this.thumbnailImageUrl) {
         return true
       }
@@ -164,6 +169,10 @@ export default {
   justify-content: center;
   align-items: center;
   background-size: cover;
+}
+
+.playback__container {
+  margin: 3rem auto 0;
 }
 
 .icon--active {

@@ -1,20 +1,10 @@
 <template>
   <div class="recording__container">
-    <div class="recording_video__container">
-      <div v-show="!blobUrl">
-        <video
-          :srcObject.prop="localStream"
-          width="375"
-          height="375"
-          autoplay
-          playsinline="true"
-        />
-      </div>
-      <div v-if="blobUrl">
-        <audio
-          :src="blobUrl"
-          controls
-        />
+    <div class="recording_audio_wave__container">
+      <div class="audio_wave">
+        <img
+          src="~/assets/image/IMG_1972.jpg"
+        >
       </div>
     </div>
     <div class="effect_box__container">
@@ -146,11 +136,17 @@ export default {
   height: 100vh;
 }
 
-.recording_video__container {
+.recording_audio_wave__container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70vh;
+  height: 60vh;
+}
+
+.audio_wave {
+  & > img {
+    width: 100%;
+  }
 }
 
 .recording_button__container {
