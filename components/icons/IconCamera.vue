@@ -17,7 +17,7 @@
   </svg>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .icon--camera {
   width: 5rem;
   height: 5rem;
