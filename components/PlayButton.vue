@@ -1,8 +1,12 @@
 <template>
   <div
     class="play_button__container"
-    @click="handleClick"
+    @click="playOrganism"
   >
+    <audio
+      ref="organism"
+      :src="organismData"
+    />
     <icon-play
       v-if="!isPlaying"
     />
@@ -22,14 +26,33 @@ export default {
     IconPause
   },
   props: {
-    isPlaying: {
-      type: Boolean,
-      default: false
+    organismData: {
+      type: String,
+      default: ''
     }
   },
+  data:() => ({
+    isPlaying: false
+  }),
+  mounted() {
+    // const audio = new Audio(this.organismData)
+    const audio = this.$refs.organism
+    audio.onloadedmetadata = data => {
+      console.log(data)
+      console.log(audio.duration)
+      console.log(audio.ended)
+    }
+    console.log(this.$refs.organism)
+  },
   methods: {
-    handleClick() {
-      this.$emit('click')
+    playOrganism() {
+      if (this.isPlaying) {
+        this.isPlaying = false
+        this.$refs.organism.pause()
+        return
+      }
+      this.isPlaying = true
+      this.$refs.organism.play()
     }
   }
 }
