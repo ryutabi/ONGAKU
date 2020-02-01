@@ -10,7 +10,17 @@
     <div class="effect_box__container">
       <effect-box
         :is-active="isActiveEffect"
-        effect-label="Destortion"
+        effect-label="Fuzz"
+        @click="effectProcessing"
+      />
+      <effect-box
+        :is-active="isActiveEffect"
+        effect-label="Reverb"
+        @click="effectProcessing"
+      />
+      <effect-box
+        :is-active="isActiveEffect"
+        effect-label="Delay"
         @click="effectProcessing"
       />
     </div>
@@ -81,6 +91,10 @@ export default {
         this.audioCtx.close()
         this.isActiveEffect = false
         return
+      }
+
+      if (this.audioCtx.state === 'closed') {
+        this.audioCtx = new AudioContext()
       }
 
       this.isActiveEffect = true

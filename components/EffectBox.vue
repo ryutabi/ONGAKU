@@ -32,8 +32,8 @@ export default {
 <style lang="scss" scoped>
 .effect_box__container {
   width: 10rem;
-  height: 5rem;
-  line-height: 5rem;
+  height: 6rem;
+  line-height: 6rem;
   text-align: center;
   border: .2rem solid $color-white;
   border-radius: .8rem;
