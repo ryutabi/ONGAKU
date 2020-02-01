@@ -107,6 +107,7 @@ export default {
     },
     async stopRecording() {
       this.organismData = await stopRec()
+      this.audioCtx.close()
       this.blobUrl = window.URL.createObjectURL(this.organismData)
       this.uploadOrganism(this.organismData).then(() => {
         console.log('アップ成功！！')
