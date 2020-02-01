@@ -10,17 +10,11 @@
         <div
           class="post_organism__thumbnail"
           :style="getThumbnailImage(post.thumbnail_url)"
-        >
-          <audio
-            ref="organism"
-            :src="post.organism_url"
-          />
-        </div>
+        />
         <div class="post_organism__feature">
           <div class="post_organism__feature__play_button">
             <play-button
-              :is-playing="isPlaying"
-              @click="playOrganism"
+              :organism-data="post.organism_url"
             />
           </div>
           <div class="post_organism__feature__info">
@@ -50,9 +44,6 @@ export default {
   components: {
     PlayButton
   },
-  data:() => ({
-    isPlaying: false
-  }),
   computed: {
     ...mapState({
       feedPosts: store => store.post.feedPosts
@@ -69,16 +60,6 @@ export default {
     getThumbnailImage(url) {
       return `background-image: url(${url})`
     },
-    playOrganism() {
-      if (this.isPlaying) {
-        this.isPlaying = false
-        this.$refs.organism[0].pause()
-        return
-      }
-      this.isPlaying = true
-      console.log(this.$refs.organism)
-      this.$refs.organism[0].play()
-    }
   }
 
 }
