@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import IconPlay from '~/components/icons/IconPlay'
 import IconPause from '~/components/icons/IconPause'
 
@@ -34,25 +35,35 @@ export default {
   data:() => ({
     isPlaying: false
   }),
-  mounted() {
-    // const audio = new Audio(this.organismData)
-    const audio = this.$refs.organism
-    audio.onloadedmetadata = data => {
-      console.log(data)
-      console.log(audio.duration)
-      console.log(audio.ended)
+  computed: {
+    ...mapState({
+      playingOrganisms: store => store.organism.organisms.length
+    }),
+    isLimitPlaying() {
+      return this.playingOrganisms >= 4 ? true : false
     }
-    console.log(this.$refs.organism)
   },
   methods: {
+    ...mapActions('organism', ['setOrganism', 'resetOrganism']),
     playOrganism() {
       if (this.isPlaying) {
-        this.isPlaying = false
-        this.$refs.organism.pause()
+        this.pauseOrganism()
         return
       }
+
+      if (this.isLimitPlaying) {
+        alert('Mixing organisms is already maximum count!!')
+        return
+      }
+
       this.isPlaying = true
+      this.setOrganism(this.organismData)
       this.$refs.organism.play()
+    },
+    pauseOrganism() {
+      this.isPlaying = false
+      this.resetOrganism(this.organismData)
+      this.$refs.organism.pause()
     }
   }
 }
