@@ -1,7 +1,7 @@
 import exportWAV from '~/utils/export_wav.js'
 
-const audioData = []
 const bufferSize = 2048
+let audioData
 let sampleRate
 
 const onAudioProcess = e => {
@@ -15,6 +15,7 @@ const onAudioProcess = e => {
 
 
 const startRec = (stream, ctx) => {
+  audioData = [] // initialize audioData
   const scriptProcessor = ctx.createScriptProcessor(bufferSize, 1, 1)
   const mediaStreamSource = ctx.createMediaStreamSource(stream)
   sampleRate = ctx.sampleRate

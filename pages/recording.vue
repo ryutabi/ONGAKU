@@ -10,7 +10,17 @@
     <div class="effect_box__container">
       <effect-box
         :is-active="isActiveEffect"
-        effect-label="Destortion"
+        effect-label="Fuzz"
+        @click="effectProcessing"
+      />
+      <effect-box
+        :is-active="isActiveEffect"
+        effect-label="Reverb"
+        @click="effectProcessing"
+      />
+      <effect-box
+        :is-active="isActiveEffect"
+        effect-label="Delay"
         @click="effectProcessing"
       />
     </div>
@@ -83,6 +93,10 @@ export default {
         return
       }
 
+      if (this.audioCtx.state === 'closed') {
+        this.audioCtx = new AudioContext()
+      }
+
       this.isActiveEffect = true
       const biquadFilter = this.audioCtx.createBiquadFilter();
       biquadFilter.type = 'highshelf';     // ハイシェルフフィルター
@@ -107,6 +121,7 @@ export default {
     },
     async stopRecording() {
       this.organismData = await stopRec()
+      this.audioCtx.close()
       this.blobUrl = window.URL.createObjectURL(this.organismData)
       this.uploadOrganism(this.organismData).then(() => {
         console.log('アップ成功！！')
