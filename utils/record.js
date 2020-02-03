@@ -22,11 +22,9 @@ const startRec = (stream, ctx) => {
   mediaStreamSource.connect(scriptProcessor)
   scriptProcessor.onaudioprocess = onAudioProcess
   scriptProcessor.connect(ctx.destination)
-  alert('rec start')
 }
 
 const stopRec = () => {
-  alert('rec stop')
   return new Promise(resolve => resolve(exportWAV(audioData, sampleRate)))
 }
 
