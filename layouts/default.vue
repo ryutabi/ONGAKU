@@ -12,7 +12,7 @@
   font-family: 'Comfortaa';
   color: $color-black;
   font-size: 4rem;
-  padding: 2rem;
+  padding: 2rem 0 3rem;
   text-align: center;
 }
 </style>

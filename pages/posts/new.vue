@@ -1,10 +1,28 @@
 <template>
   <div class="new_post__container">
+    <div
+      class="new_post__thumbnail__container"
+      :style="thumbnailImage"
+    >
+      <div class="camera_control__container">
+        <label for="camera">
+          <icon-camera
+            :class="{'icon--active': isThumbnailUrl}"
+          />
+        </label>
+        <input
+          v-show="false"
+          id="camera"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          @change="inputImage"
+        >
+      </div>
+    </div>
     <div class="playback__container">
-      <video
+      <audio
         :src="organismUrl"
-        width="300"
-        height="300"
         controls
       />
     </div>
@@ -45,44 +63,67 @@
 
 <script>
 import { mapState } from 'vuex'
-import { db } from '~/plugins/firebase'
+import { db, storage } from '~/plugins/firebase'
 import AppInput from '~/components/AppInput'
 import AppTextaria from '~/components/AppTextaria'
 import AppButton from '~/components/AppButton'
+import IconCamera from '~/components/icons/IconCamera'
 
 const postsCollection = db.collection('posts')
+const thumbnailStorageRef = storage.ref('thumbnails')
 
 export default {
   layout: 'blank',
   components: {
     AppInput,
     AppTextaria,
-    AppButton
+    AppButton,
+    IconCamera
   },
   data:() => ({
     postData: {
       title: '',
       place: '',
       target: '',
-      feeling: ''
-    }
+      feeling: '',
+      thumbnail_url: ''
+    },
+    localImageData: null,
+    thumbnailImageUrl: null
   }),
   computed: {
     ...mapState({
       postId: store => store.post.postData.id,
       organismUrl: store => store.post.postData.organismUrl
-    })
+    }),
+    thumbnailImage() {
+      return `background-image: url(${this.thumbnailImageUrl})`
+    },
+    isThumbnailUrl() {
+      if (this.thumbnailImageUrl) {
+        return true
+      }
+      return false
+    }
   },
   methods: {
-    postSubmit() {
+    inputImage(e) {
+      const imageData = e.target.files[0]
+      this.localImageData = imageData
+      this.thumbnailImageUrl = URL.createObjectURL(imageData)
+    },
+    async postSubmit() {
+      await this.updateThumbnailImage(this.localImageData)
+
       const submitPostData = {
         id: this.postId,
         organism_url: this.organismUrl,
-        // user: {
-        //   name: '',
-        //   uid: '',
-        //   icon_url: ''
-        // },
+        thumbnail_url: this.postData.thumbnail_url,
+        user: {
+          name: '',
+          uid: '',
+          icon_url: ''
+        },
         title: this.postData.title,
         place: this.postData.place,
         recording_target: this.postData.target,
@@ -98,6 +139,15 @@ export default {
     },
     postCancel() {
       this.$router.push('/')
+    },
+    async updateThumbnailImage(data) {
+      const thumbnailRef = thumbnailStorageRef.child(this.postId)
+      await thumbnailRef.put(data).then(snapshot => {
+        console.log(`upload success!!: ${snapshot.state}`)
+      })
+      await thumbnailRef.getDownloadURL().then(url => {
+        this.postData.thumbnail_url = url
+      })
     }
   }
 
@@ -111,12 +161,22 @@ export default {
   flex-direction: column;
 }
 
-.playback__container {
-  margin: 0 auto;
+.new_post__thumbnail__container {
   background-color: $bg-black;
-  width: 100%;
+  width: 100vw;
+  height: 75vw;
   display: flex;
   justify-content: center;
+  align-items: center;
+  background-size: cover;
+}
+
+.playback__container {
+  margin: 3rem auto 0;
+}
+
+.icon--active {
+  opacity: 0.5;
 }
 
 .new_post {

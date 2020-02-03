@@ -1,27 +1,28 @@
 <template>
   <div class="recording__container">
-    <div class="recording_video__container">
-      <div v-show="!blobUrl">
-        <video
-          :srcObject.prop="localStream"
-          autoplay
-          playsinline="true"
-        />
-      </div>
-      <div v-if="blobUrl">
-        <video
-          :src="blobUrl"
-          width="375"
-          height="375"
-        />
+    <div class="recording_audio_wave__container">
+      <div class="audio_wave">
+        <img
+          src="~/assets/image/IMG_1972.jpg"
+        >
       </div>
     </div>
     <div class="effect_box__container">
       <effect-box
         :is-active="isActiveEffect"
-        effect-label="Destortion"
+        effect-label="Fuzz"
         @click="effectProcessing"
       />
+      <!-- <effect-box
+        :is-active="isActiveEffect"
+        effect-label="Reverb"
+        @click="effectProcessing"
+      />
+      <effect-box
+        :is-active="isActiveEffect"
+        effect-label="Delay"
+        @click="effectProcessing"
+      /> -->
     </div>
     <div class="recording_button__container">
       <record-button
@@ -34,7 +35,7 @@
 
 <script>
 import { storage } from '~/plugins/firebase'
-import record from '~/utils/record'
+import { startRec, stopRec } from '~/utils/record'
 import RecordButton from '~/components/RecordButton'
 import EffectBox from '~/components/EffectBox'
 import { mapActions } from 'vuex'
@@ -47,6 +48,11 @@ export default {
     RecordButton,
     EffectBox
   },
+  head: {
+    script: [
+      { src: 'https://cdn.webrtc-experiment.com/MediaStreamRecorder.js' }
+    ]
+  },
   data:() => ({
     isRecorded: false,
     isActiveEffect: false,
@@ -56,29 +62,26 @@ export default {
     blobUrl: null
   }),
   created() {
-    if (navigator.mediaDevices) {
-      alert("Media device supported");
-    } else {
-      alert("Media device not supported");
+    if (!navigator.mediaDevices) {
+      alert("Media device is not supported")
+      return
     }
 
+    window.AudioContext = window.AudioContext || window.webkitAudioContext
+
     navigator.mediaDevices.getUserMedia({
-      video: {
-        width: 375,
-        height: 375,
-        facingMode: { exact: "environment" }
-      },
-      audio: true
+      audio: true,
+      video: false
     })
     .then(stream => {
       this.localStream = stream
+      this.audioCtx = new AudioContext()
     })
     .catch(e => {
       alert(e)
     })
   },
   beforeDestroy() {
-    this.localStream.getVideoTracks().forEach(track => track.stop())
     this.localStream.getAudioTracks().forEach(track => track.stop())
   },
   methods: {
@@ -87,11 +90,11 @@ export default {
       if (this.isActiveEffect) {
         this.audioCtx.close()
         this.isActiveEffect = false
+        this.audioCtx = new AudioContext()
         return
       }
 
       this.isActiveEffect = true
-      this.audioCtx = new(window.AudioContext || window.webkitAudioContext)
       const biquadFilter = this.audioCtx.createBiquadFilter();
       biquadFilter.type = 'highshelf';     // ハイシェルフフィルター
       biquadFilter.frequency.value = 1000; // 周波数閾値
@@ -106,14 +109,16 @@ export default {
         this.stopRecording()
         return
       }
+
       this.startRecording()
       this.isRecorded = true
     },
     startRecording() {
-      record.startRec(this.localStream)
+      startRec(this.localStream, this.audioCtx)
     },
     async stopRecording() {
-      this.organismData = await record.stopRec()
+      this.organismData = await stopRec()
+      this.audioCtx.close()
       this.blobUrl = window.URL.createObjectURL(this.organismData)
       this.uploadOrganism(this.organismData).then(() => {
         console.log('アップ成功！！')
@@ -143,11 +148,17 @@ export default {
   height: 100vh;
 }
 
-.recording_video__container {
+.recording_audio_wave__container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70vh;
+  height: 60vh;
+}
+
+.audio_wave {
+  & > img {
+    width: 100%;
+  }
 }
 
 .recording_button__container {
