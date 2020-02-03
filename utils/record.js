@@ -11,7 +11,6 @@ const onAudioProcess = e => {
     bufferData[i] = input[i]
   }
   audioData.push(bufferData)
-  alert('audio process is done')
 }
 
 
