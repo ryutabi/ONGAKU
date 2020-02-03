@@ -54,6 +54,7 @@ const mergeBuffers = _audioData => {
 const exportWAV = (audioData, sampleRate) => {
   const dataView = encodeWAV(mergeBuffers(audioData), sampleRate);
   const audioBlob = new Blob([dataView], { type: 'audio/wav' });
+  alert(audioBlob)
   return audioBlob
 }
 

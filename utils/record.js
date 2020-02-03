@@ -27,7 +27,6 @@ const startRec = (stream, ctx) => {
 
 const stopRec = () => {
   alert('rec stop')
-  alert('audio data:' + audioData)
   return new Promise(resolve => resolve(exportWAV(audioData, sampleRate)))
 }
 
