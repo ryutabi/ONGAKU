@@ -13,7 +13,7 @@
         effect-label="Fuzz"
         @click="effectProcessing"
       />
-      <effect-box
+      <!-- <effect-box
         :is-active="isActiveEffect"
         effect-label="Reverb"
         @click="effectProcessing"
@@ -22,7 +22,7 @@
         :is-active="isActiveEffect"
         effect-label="Delay"
         @click="effectProcessing"
-      />
+      /> -->
     </div>
     <div class="recording_button__container">
       <record-button
@@ -90,11 +90,8 @@ export default {
       if (this.isActiveEffect) {
         this.audioCtx.close()
         this.isActiveEffect = false
-        return
-      }
-
-      if (this.audioCtx.state === 'closed') {
         this.audioCtx = new AudioContext()
+        return
       }
 
       this.isActiveEffect = true

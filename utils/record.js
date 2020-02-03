@@ -11,6 +11,7 @@ const onAudioProcess = e => {
     bufferData[i] = input[i]
   }
   audioData.push(bufferData)
+  alert('audio process is done')
 }
 
 
@@ -22,9 +23,12 @@ const startRec = (stream, ctx) => {
   mediaStreamSource.connect(scriptProcessor)
   scriptProcessor.onaudioprocess = onAudioProcess
   scriptProcessor.connect(ctx.destination)
+  alert('rec start')
 }
 
 const stopRec = () => {
+  alert('rec stop')
+  alert('audio data:' + audioData)
   return new Promise(resolve => resolve(exportWAV(audioData, sampleRate)))
 }
 
