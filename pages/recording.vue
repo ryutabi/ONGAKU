@@ -118,7 +118,6 @@ export default {
     },
     async stopRecording() {
       this.organismData = await stopRec()
-      alert('audioData: ' + this.organismData)
       this.audioCtx.close()
       this.blobUrl = window.URL.createObjectURL(this.organismData)
       this.uploadOrganism(this.organismData).then(() => {
