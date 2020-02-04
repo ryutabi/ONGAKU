@@ -131,8 +131,16 @@ export default {
     padding: .5rem;
     color: $color-white;
 
+    & * {
+      width: 11rem;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
     & > p {
       font-size: 1.2rem;
+
     }
   }
 }
