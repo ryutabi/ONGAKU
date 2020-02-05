@@ -111,6 +111,7 @@ export default {
   border-radius: 1rem 1rem 0 0;
   overflow: hidden;
   background-size: cover;
+  background-position: center;
 }
 
 .post_organism__feature {
@@ -131,8 +132,16 @@ export default {
     padding: .5rem;
     color: $color-white;
 
+    & * {
+      width: 11rem;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
     & > p {
       font-size: 1.2rem;
+
     }
   }
 }
