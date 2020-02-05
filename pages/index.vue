@@ -111,6 +111,7 @@ export default {
   border-radius: 1rem 1rem 0 0;
   overflow: hidden;
   background-size: cover;
+  background-position: center;
 }
 
 .post_organism__feature {
